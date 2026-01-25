@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+$orange: #fc8019;
+$dark: #282c3f;
+
+.swiggy-hero {
+  background: $orange;
+  min-height: 100vh;
+  padding: 30px 80px;
+  font-family: "Inter", sans-serif;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .logo {
+    width: 140px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    span {
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .app-btn {
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .sign-btn {
+      background: black;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+  }
+}
+
+/* SEARCH BAR */
+.search-bar {
+  margin: 60px auto;
+  max-width: 900px;
+  height: 60px;
+  background: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+
+  .location,
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #686b78;
+    font-size: 15px;
+    flex: 1;
+  }
+
+  .divider {
+    width: 1px;
+    height: 30px;
+    background: #ddd;
+  }
+
+  input {
+    border: none;
+    outline: none;
+    font-size: 15px;
+    width: 100%;
+  }
+}
+
+/* CARDS */
+.cards {
+  display: flex;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.card {
+  background: white;
+  border-radius: 30px;
+  width: 50%;
+  padding: 35px 5px;
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+  }
+
+  .card-img {
+    width: 170px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    h2 {
+      font-size: 30px;
+      font-weight: 800;
+      color: $dark;
+    }
+
+    p {
+      color: #686b78;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .offer {
+      margin-top: 6px;
+      color: $orange;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 22px;
+      align-self: flex-start;
+      background: $orange;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
