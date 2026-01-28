@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zomato
+  name: swiggy
   labels:
-    app: zomato
+    app: swiggy
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: zomato
+      app: swiggy
   template:
     metadata:
       labels:
-        app: zomato
+        app: swiggy
     spec:
       containers:
-      - name: zomato
-        image: kastrov/zomato:latest
+      - name: swiggy
+        image: subhashvp1302/swiggy
         ports:
         - containerPort: 3000
