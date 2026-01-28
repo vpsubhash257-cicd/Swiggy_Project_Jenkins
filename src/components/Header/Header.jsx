@@ -25,7 +25,7 @@ const Header = () => {
         </div>
         <div className="divider" />
         <div className="search">
-          🔍
+          
           <input placeholder="Search for restaurant, item or more" />
         </div>
       </div>
