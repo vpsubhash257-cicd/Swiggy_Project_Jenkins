@@ -1,8 +1,7 @@
-DevOps Project - Dr. Kastro Kiran
-Deployment of ZOMATO Project
---------------------------------------------
-Repo URL: https://github.com/KastroVKiran/DevOps-Project-Zomato-Kastro.git
 
+Deployment of Swiggy Project
+--------------------------------------------
+Repo URL: https://github.com/vpsubhash257-cicd/Swiggy_Project_Jenkins
 
 1. Launch an Instance (Ubuntu, 24.04, t2.large, 30 GB)
 
@@ -72,9 +71,6 @@ sudo apt-get install trivy
 
 Verifiy Trivy installation: trivy --version
 
-8. Install Docker Scout
-Make sure to Login to DockerHub account in browser
-<Follow the process as explained in the video>
 
 9. Install SonarQube using Docker
 $ docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
@@ -134,7 +130,7 @@ pipeline {
         }
         stage ("Git Checkout") {
             steps {
-                git 'https://github.com/KastroVKiran/Zomato-Project-Kastro.git'
+                git 'https://github.com/vpsubhash257-cicd/Swiggy_Project_Jenkins'
             }
         }
         stage("Sonarqube Analysis"){
@@ -177,26 +173,16 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'docker') {
-                        sh "docker tag zomato kastrov/zomato:latest "
-                        sh "docker push kastrov/zomato:latest "
+                        sh "docker tag swiggy subhash1302/swiggy:latest "
+                        sh "docker push subhash1302/swiggy:latest "
                     }
                 }
             }
         }
-        stage('Docker Scout Image') {
-            steps {
-                script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview kastrov/zomato:latest'
-                       sh 'docker-scout cves kastrov/zomato:latest'
-                       sh 'docker-scout recommendations kastrov/zomato:latest'
-                   }
-                }
-            }
-        }
+        
         stage ("Deploy to Container") {
             steps {
-                sh 'docker run -d --name zomato -p 3000:3000 kastrov/zomato:latest'
+                sh 'docker run -d --name zomato -p 3000:3000 subhash1302/swiggy:latest'
             }
         }
     }
@@ -219,7 +205,7 @@ pipeline {
                 </body>
                 </html>
             """,
-            to: 'kastrokiran@gmail.com',
+            to: 'vpsubhash257@gmail.com',
             mimeType: 'text/html',
             attachmentsPattern: 'trivy.txt'
         }
@@ -475,9 +461,9 @@ Note 2: Run the VS Code Editor/Power Shell/Command Prompt as Administrator, to a
 Open vs code editor and execute the below commands; 
 Step 01: Create EKS Cluster using eksctl
 # Create Cluster. I will keep the cluster name as "kastrocluster"
-eksctl create cluster --name=kastrocluster \
-                      --region=ap-northeast-1 \
-                      --zones=ap-northeast-1a,ap-northeast-1c \
+eksctl create cluster --name=swiggy \
+                      --region=us-east-1 \
+                      --zones=us-east-1a,us-east-1b \
                       --without-nodegroup                  
 
 If you see any error while executing the above commands in VS Code Editor, it is due to how PowerShell interprets backslashes (\) as line continuation characters. Unlike Unix-like shells, PowerShell does not support line continuation in this way.
@@ -491,17 +477,17 @@ eksctl create cluster --name=kastrocluster --region=ap-northeast-1 --zones=ap-no
 
 Approach 2: Use PowerShell’s Backtick for Line Continuation
 If you want to split the command across multiple lines, you can use the backtick character (`) in PowerShell for line continuation:
-eksctl create cluster --name=kastrocluster `
+eksctl create cluster --name=swiggy `
                       --region=ap-northeast-1 `
-                      --zones=ap-northeast-1a,ap-northeast-1c `
+                      --zones=us-east-1a,us-east-1c `
                       --without-nodegroup
 
 Note: Make sure there is no space after the backtick.
 
 It will take atleast 20-25 minutes for the cluster to create.
 
-To verify the cluster creation ---> Goto Cloud Formation service in AWS ----> You should see a stack got created with the name "kastrocluster". Make sure in the vs code editor the cluster will get created. As said earlier it will take atleast 20 minutes.
-Once the cluster is ready, you will see "EKS Cluster "kastrocluster" in "us-east-1" region is ready" in vs code editor. wait till you see this.
+To verify the cluster creation ---> Goto Cloud Formation service in AWS ----> You should see a stack got created with the name "swiggy". Make sure in the vs code editor the cluster will get created. As said earlier it will take atleast 20 minutes.
+Once the cluster is ready, you will see "EKS Cluster "swiggy" in "us-east-1" region is ready" in vs code editor. wait till you see this.
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Get List of clusters
 eksctl get cluster
@@ -518,49 +504,17 @@ eksctl utils associate-iam-oidc-provider \
     --cluster <cluster-name> \
     --approve
 
-# Replace with region & cluster name
-eksctl utils associate-iam-oidc-provider \
-    --region ap-northeast-1 \
-    --cluster kastrocluster \
-    --approve
 
-(OR)
-eksctl utils associate-iam-oidc-provider --region ap-northeast-1 --cluster kastrocluster --approve
-
-(OR)
-eksctl utils associate-iam-oidc-provider `
-    --region uap-northeast-1 `
-    --cluster kastrocluster `
-    --approve
 
 Step 03: Create Node Group with additional Add-Ons in Public Subnets
 These add-ons will create the respective IAM policies for us automatically within our Node Group role.
 
-# Create Public Node Group   
-eksctl create nodegroup --cluster=kastrocluster \
-                       --region=ap-northeast-1 \
-                       --name=kastrodemo-ng-public1 \
-                       --node-type=t3.medium \
-                       --nodes=2 \
-                       --nodes-min=2 \
-                       --nodes-max=4 \
-                       --node-volume-size=20 \
-                       --ssh-access \
-                       --ssh-public-key=Prajwal \
-                       --managed \
-                       --asg-access \
-                       --external-dns-access \
-                       --full-ecr-access \
-                       --appmesh-access \
-                       --alb-ingress-access
 
-(OR)
-eksctl create nodegroup --cluster=kastrocluster --region=ap-northeast-1 --name=kastrodemo-ng-public1 --node-type=t3.medium --nodes=2 --nodes-min=2 --nodes-max=4 --node-volume-size=20 --ssh-access --ssh-public-key=Prajwal --managed --asg-access --external-dns-access --full-ecr-access --appmesh-access --alb-ingress-access
 
 (OR)
 eksctl create nodegroup --cluster=kastrocluster `
-    --region=ap-northeast-1 `
-    --name=kastrodemo-ng-public1 `
+    --region=us-east-1 `
+    --name=swiggy-ng-public1 `
     --node-type=t3.medium `
     --nodes=2 `
     --nodes-min=2 `
@@ -709,10 +663,8 @@ Note: If you see error in Prometheus under "k8s", open port number 9100 for the 
 After everything is done. Delete everything. Make sure to delete the Cloud Formation Stacks.
 
 ========================================================================================================
-Kind Request:
-Once after you have successfully deployed the App, kindly share your experience on LinkedIn by Tagging me and also provide the YouTube link of this project in your post, as it helps others to access the video quickly. 
-========================================================================================================
 												HAPPY LEARNING
+
 
 
 
